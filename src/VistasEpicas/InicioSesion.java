@@ -5,8 +5,13 @@
  */
 package VistasEpicas;
 
-import javax.swing.WindowConstants;
-import sun.nio.ch.WindowsAsynchronousChannelProvider;
+import DAOs.FuncionesInicioSesion;
+import VEOs.Usuarios;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,6 +28,8 @@ public class InicioSesion extends javax.swing.JFrame {
         this.jLabel1.setVisible(false);
         this.jLabel2.setVisible(false);
         this.jLabel3.setVisible(false);
+        this.jLabel4.setVisible(false);
+        this.jLabel5.setVisible(false);
     }
 
     /**
@@ -59,6 +66,8 @@ public class InicioSesion extends javax.swing.JFrame {
         ContraseñaLogin = new javax.swing.JTextField();
         GO = new javax.swing.JLabel();
         Cerrar = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -216,6 +225,11 @@ public class InicioSesion extends javax.swing.JFrame {
         ContraseñaLogin.setFont(new java.awt.Font("Yu Gothic UI Semilight", 1, 10)); // NOI18N
 
         GO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Go_52px.png"))); // NOI18N
+        GO.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                GOMouseClicked(evt);
+            }
+        });
 
         Cerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Cancel_20px.png"))); // NOI18N
         Cerrar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -223,6 +237,10 @@ public class InicioSesion extends javax.swing.JFrame {
                 CerrarMouseClicked(evt);
             }
         });
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Error_20px.png"))); // NOI18N
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Error_20px.png"))); // NOI18N
 
         javax.swing.GroupLayout LoginLayout = new javax.swing.GroupLayout(Login);
         Login.setLayout(LoginLayout);
@@ -236,25 +254,31 @@ public class InicioSesion extends javax.swing.JFrame {
                             .addComponent(TextoNombreLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(TextoLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(PreguntaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(NombreLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(LoginLayout.createSequentialGroup()
+                                .addComponent(NombreLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(TextoContraseñaLogin)
-                            .addComponent(ContraseñaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(LoginLayout.createSequentialGroup()
+                                .addComponent(ContraseñaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(LoginLayout.createSequentialGroup()
                         .addGap(98, 98, 98)
                         .addComponent(GO, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginLayout.createSequentialGroup()
                         .addComponent(ImgUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(73, 73, 73))
-                    .addComponent(Cerrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(Cerrar, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         LoginLayout.setVerticalGroup(
             LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LoginLayout.createSequentialGroup()
-                .addComponent(Cerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Cerrar)
                 .addGap(7, 7, 7)
                 .addComponent(ImgUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -264,17 +288,21 @@ public class InicioSesion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(TextoNombreLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(NombreLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(NombreLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(TextoContraseñaLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ContraseñaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ContraseñaLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(GO, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        MainPanelInicioS.add(Login, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 250, 410));
+        MainPanelInicioS.add(Login, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 260, 410));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -291,45 +319,93 @@ public class InicioSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void NombreLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NombreLoginActionPerformed
-        
+
     }//GEN-LAST:event_NombreLoginActionPerformed
 
     private void ConfirmacionRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ConfirmacionRegistroMouseClicked
         int contador = 0;
-        if(this.NombreRegistro.getText().isEmpty() == true){
+        if (this.NombreRegistro.getText().isEmpty() == true) {
             this.jLabel1.setVisible(true);
             this.TextoConfirmacion.setText("Falta llenar algunos campos :)");
-        }else{
+        } else {
             contador++;
             this.jLabel1.setVisible(false);
         }
-        if(this.ContraseñaRegistro.getText().isEmpty() == true){
+        if (this.ContraseñaRegistro.getText().isEmpty() == true) {
             this.jLabel2.setVisible(true);
             this.TextoConfirmacion.setText("Falta llenar algunos campos :)");
-        }else{
+        } else {
             contador++;
             this.jLabel2.setVisible(false);
         }
-        if(this.CorreoRegistro.getText().isEmpty() == true){
+        if (this.CorreoRegistro.getText().isEmpty() == true) {
             this.jLabel3.setVisible(true);
             this.TextoConfirmacion.setText("Falta llenar algunos campos :)");
-        }else{
+        } else {
             contador++;
             this.jLabel3.setVisible(false);
         }
-        
-        if(contador == 3){
-            this.TextoConfirmacion.setText("Registro completado con exito :)");
+
+        if (contador == 3) {
+            FuncionesInicioSesion inser = new FuncionesInicioSesion();
+            try {
+                inser.insertar(this.NombreRegistro.getText(), this.ContraseñaRegistro.getText(), this.CorreoRegistro.getText());
+                this.NombreRegistro.setText("");
+                this.ContraseñaRegistro.setText("");
+                this.CorreoRegistro.setText("");
+                JOptionPane.showMessageDialog(this, "Registro completado con exito");
+            } catch (URISyntaxException | SQLException | IllegalArgumentException | IllegalAccessException ex) {
+                Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }//GEN-LAST:event_ConfirmacionRegistroMouseClicked
-
-    private void ContraseñaRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContraseñaRegistroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ContraseñaRegistroActionPerformed
 
     private void CerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CerrarMouseClicked
         System.exit(0);
     }//GEN-LAST:event_CerrarMouseClicked
+
+    private void GOMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GOMouseClicked
+        int contador = 0;
+        if (this.NombreLogin.getText().isEmpty() == true) {
+            this.jLabel4.setVisible(true);
+        } else {
+            contador++;
+            this.jLabel4.setVisible(false);
+        }
+        if (this.ContraseñaLogin.getText().isEmpty() == true) {
+            this.jLabel5.setVisible(true);
+        } else {
+            contador++;
+            this.jLabel5.setVisible(false);
+        }
+        if (contador == 2) {
+            FuncionesInicioSesion fun = new FuncionesInicioSesion();
+            Usuarios usu = fun.seleccionarUno(this.NombreLogin.getText()); 
+            if(usu!=null){
+                try {
+                    if (usu.getContraseña().equalsIgnoreCase(this.ContraseñaLogin.getText())) {
+                        JOptionPane.showMessageDialog(this, "Bienvenido " + usu.getNombre());
+                        this.setVisible(false);
+                        PrincipalFuncionesEpicas pri = new PrincipalFuncionesEpicas();
+                        pri.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Datos erroneos, intentalo de nuevo");
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                } 
+            }else{
+                JOptionPane.showMessageDialog(this, "El usuario " + this.NombreLogin.getText() + " " + "no existe");
+            }
+            
+
+        }
+    }//GEN-LAST:event_GOMouseClicked
+
+    private void ContraseñaRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContraseñaRegistroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ContraseñaRegistroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,5 +468,7 @@ public class InicioSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
 }

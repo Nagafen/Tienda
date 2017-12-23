@@ -10,6 +10,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.locks.StampedLock;
 
 /**
  *
@@ -31,13 +32,14 @@ public class CreacionBaseYTabla {
         }
     }
     
-    public static void CrearTabla(){
-        String url = "jdbc:sqlite:src/BaseDeDatos/prueba.db";
+    public static void CrearTablaInventario(){
+        String url = "jdbc:sqlite:src/BaseDeDatos/tienda.db";
         
-        String sql = "create table if not exists Persona (\n"
-                + "id varchar (5) primary key,\n"
-                + "name varchar (30) not null,\n"
-                + "lastname varchar (30) not null)";
+        String sql = "create table if not exists Inventario (\n"
+                + "id integer primary key AUTOINCREMENT,\n"
+                + "descripcion varchar (70) not null,\n"
+                + "catidad varchar (3) not null,\n"
+                + "precio integer not null)";
         
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
@@ -48,10 +50,28 @@ public class CreacionBaseYTabla {
         }
     }
     
+    public static void CrearTablaUsuarios(){
+        String url ="jdbc:sqlite:src/BaseDeDatos/tienda.db";
+        
+        String sql = "create table if not exists Usuarios (\n"
+                + "nombre varchar (20) not null,\n"
+                + "contraseña varchar (20) not null,\n"
+                + "correo varchar (40) not null)";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement()) {
+            
+            stmt.execute(sql);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    
     public static void main(String[] args) {
-        CrearBase("prueba");
-        CrearTabla();
-        System.out.println("Mi verga es larga :=");
+        CrearBase("tienda");
+        CrearTablaInventario();
+        CrearTablaUsuarios();
     }
 
 }
